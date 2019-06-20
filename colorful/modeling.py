@@ -1,16 +1,21 @@
 import keras
+import json
 from keras import layers, models, optimizers
 from keras.optimizers import SGD, Adadelta, Adam, RMSprop
 from keras.layers import Dropout,Flatten,Conv2D,MaxPooling2D,BatchNormalization,Activation,regularizers
 from keras.utils import np_utils
 import numpy as np
 
-
+f = open('set.json', 'r', encoding="utf-8")
+json_data = json.load(f)
+npy = json_data["save_npy"]
+model = json_data["model"]
+weight = json_data["weight"]
 img_rows, img_cols = 32,32
 img_channels = 3
-X_train, X_test, y_train, y_test = np.load("/Users/e175764/Desktop/DataMining/colorful/insta_data.npy")
+X_train, X_test, y_train, y_test = np.load(npy + "/insta_data2.npy")
 #データの処理
-categories = ["映える","映えない"]
+categories = ["building","food","pet","view"]
 nb_classes = len(categories)
 
 #データの正規化
@@ -27,18 +32,18 @@ model = models.Sequential()
 model.add(layers.Conv2D(32,(3,3),activation="relu",input_shape=(150,150,3)))
 model.add(layers.MaxPooling2D((2,2)))
 
-model.add(layers.Conv2D(64,(3,3),activation="relu"))
+model.add(layers.Conv2D(32,(3,3),activation="relu"))
 model.add(layers.MaxPooling2D((2,2)))
 
-model.add(layers.Conv2D(128,(3,3),activation="relu"))
+model.add(layers.Conv2D(32,(3,3),activation="relu"))
 model.add(layers.MaxPooling2D((2,2)))
-model.add(layers.Conv2D(128,(3,3),activation="relu"))
+model.add(layers.Conv2D(32,(3,3),activation="relu"))
 model.add(layers.MaxPooling2D((2,2)))
 
 model.add(layers.Flatten())
 model.add(Dropout(0.5))
-model.add(layers.Dense(256,activation="relu"))
-model.add(layers.Dense(2,activation="sigmoid")) #分類先の種類分設定
+model.add(layers.Dense(32,activation="relu"))
+model.add(layers.Dense(4,activation="sigmoid")) #分類先の種類分設定
 
 '''
 baseMapNum=32
@@ -91,7 +96,7 @@ model.compile(loss="categorical_crossentropy", # 誤差(損失)関数
               
 model = model.fit(X_train,
                   y_train,
-                  epochs=10,
+                  epochs=5,
                   batch_size=6,
                   validation_data=(X_test,y_test))
                   
@@ -119,9 +124,9 @@ plt.legend()
 plt.savefig('loss.jpg')
 
 json_string = model.model.to_json()
-open('/Users/e175764/Desktop/DataMining/tea_predict.json', 'w').write(json_string)
+open(model+'/tea_predict.json', 'w').write(json_string)
 
 #重みの保存
 
-hdf5_file = "/Users/e175764/Desktop/DataMining/colorful/tea_predict.hdf5"
+hdf5_file = weight+"/tea_predict.hdf5"
 model.model.save_weights(hdf5_file)

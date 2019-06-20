@@ -1,15 +1,19 @@
+import json
 from keras import models
 from keras.models import model_from_json
 from keras.preprocessing import image
 from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
 import numpy as np
+f = open("set.json", 'r')
+json_data = json.load(f) #JSON形式で読み込む
+modelpass= json_data[model]
 
 #保存したモデルの読み込み
-model = model_from_json(open('/Users/e175764/Desktop/DataMining/colorful/tea_predict.json').read())
+model = model_from_json(open(modelpass +'/tea_predict.json').read())
 #保存した重みの読み込み
-model.load_weights('/Users/e175764/Desktop/DataMining/colorful/tea_predict.hdf5')
+model.load_weights(modelpass +'/tea_predict.hdf5')
 
-categories = ["映える","映えない"]
+categories = ["building","food","pet","view"]
 
 #画像を読み込む
 img_path = str(input())
@@ -22,10 +26,15 @@ x = preprocess_input(x)
 preds = model.predict(x)
 #予測結果によって処理を分ける
 if preds[0,0] == 1:
-    print ("映える")
+	print("入力画像はbuilding")
+elif preds[0,1] == 1:
+	print("入力画像はfood")
+elif preds[0,2] == 1:
+	print("入力画像はpet")
+elif preds[0,3] == 1:
+	print("入力画像はview")
 else:
-    message = "映えぬ"
-    print(message)
+	print("だいたいペット")
 
 print('preds.shape: {}'.format(preds.shape))  # preds.shape: (1, 1000)
 """
