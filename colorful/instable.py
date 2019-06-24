@@ -4,9 +4,10 @@ from keras.models import model_from_json
 from keras.preprocessing import image
 from keras.applications.vgg16 import VGG16, preprocess_input, decode_predictions
 import numpy as np
+
 f = open("set.json", 'r')
 json_data = json.load(f) #JSON形式で読み込む
-modelpass= json_data[model]
+modelpass = json_data["model"]
 
 #保存したモデルの読み込み
 model = model_from_json(open(modelpass +'/tea_predict.json').read())
@@ -36,6 +37,7 @@ elif preds[0,3] == 1:
 else:
 	print("だいたいペット")
 
+print(preds)
 print('preds.shape: {}'.format(preds.shape))  # preds.shape: (1, 1000)
 """
 result = decode_predictions(preds, top=2)[0]

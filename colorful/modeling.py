@@ -9,7 +9,7 @@ import numpy as np
 f = open('set.json', 'r', encoding="utf-8")
 json_data = json.load(f)
 npy = json_data["save_npy"]
-model = json_data["model"]
+model_name = json_data["model"]
 weight = json_data["weight"]
 img_rows, img_cols = 32,32
 img_channels = 3
@@ -29,20 +29,27 @@ y_test  = np_utils.to_categorical(y_test, nb_classes)
 
 
 model = models.Sequential()
-model.add(layers.Conv2D(32,(3,3),activation="relu",input_shape=(150,150,3)))
+model.add(layers.Conv2D(32,(3,3),activation="relu", padding='same',input_shape=(150,150,3)))
+model.add(layers.Conv2D(32,(3,3),activation="relu", padding='same',input_shape=(150,150,3)))
+model.add(BatchNormalization())
 model.add(layers.MaxPooling2D((2,2)))
-
-model.add(layers.Conv2D(32,(3,3),activation="relu"))
+model.add(Dropout(0.25))
+model.add(layers.Conv2D(32,(3,3),activation="relu", padding='same',input_shape=(150,150,3)))
+model.add(layers.Conv2D(32,(3,3),activation="relu", padding='same',input_shape=(150,150,3)))
+model.add(BatchNormalization())
 model.add(layers.MaxPooling2D((2,2)))
-
-model.add(layers.Conv2D(32,(3,3),activation="relu"))
+model.add(Dropout(0.35))
+model.add(layers.Conv2D(32,(3,3),activation="relu", padding='same',input_shape=(150,150,3)))
+model.add(layers.Conv2D(32,(3,3),activation="relu", padding='same',input_shape=(150,150,3)))
+model.add(BatchNormalization())
 model.add(layers.MaxPooling2D((2,2)))
-model.add(layers.Conv2D(32,(3,3),activation="relu"))
-model.add(layers.MaxPooling2D((2,2)))
-
+model.add(layers.Conv2D(32,(3,3),activation="relu", padding='same',input_shape=(150,150,3)))
+model.add(layers.Conv2D(32,(3,3),activation="relu", padding='same',input_shape=(150,150,3)))
+model.add(BatchNormalization())
+model.add(Dropout(0.45))
 model.add(layers.Flatten())
-model.add(Dropout(0.5))
-model.add(layers.Dense(32,activation="relu"))
+#model.add(Dropout(0.5))
+model.add(layers.Dense(64,activation="relu"))
 model.add(layers.Dense(4,activation="sigmoid")) #分類先の種類分設定
 
 '''
@@ -124,7 +131,7 @@ plt.legend()
 plt.savefig('loss.jpg')
 
 json_string = model.model.to_json()
-open(model+'/tea_predict.json', 'w').write(json_string)
+open(model_name +'/tea_predict.json', 'w').write(json_string)
 
 #重みの保存
 

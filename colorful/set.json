@@ -1,5 +1,5 @@
 {
-    "": "Inflation.pyの水増しする画像が入ったデータのディレクトリのパスを記述。例/Users/tuhadaiki/instagram/data1",
+    "": "Inflation.pyの水増しする画像が入ったデータのディレクトリのパスを記述。",
     "images": "/Users/tuhadaiki/Instable/data1/",
     "": ".npyとしてデータを保存する際の保存先のディレクトリ",
     "save_npy": "/Users/tuhadaiki/Instable/colorful",

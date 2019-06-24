@@ -9,7 +9,7 @@ f = open('set.json', 'r', encoding="utf-8")
 json_data = json.load(f)
 #画像が保存されているルートディレクトリのパス(水増し前)
 root_dir = json_data["images"]
-save_npy = json_data["save_npy"]
+save = json_data["save_npy"]
 # 商品名
 categories = ["building","food","pet","view"]
 
@@ -37,7 +37,7 @@ def add_sample(cat, fname, X, Y, flag):
 	img = img.resize((150, 150))
 	data = np.asarray(img)
 	if(flag):
-		for i in range(50):
+		for i in range(10):
 			data2 = draw_images(datagen,data)
 			X.append(data2)
 			Y.append(cat)
@@ -66,7 +66,7 @@ for idx, cat in enumerate(categories):
 
 #シャッフル後、学習データと検証データに分ける
 random.shuffle(allfiles)
-th = math.floor(len(allfiles) * 0.8)
+th = math.floor(len(allfiles) * 0.8)#リーブワンアウトとかどうか
 train = allfiles[0:th]
 test  = allfiles[th:]
 
@@ -74,4 +74,4 @@ X_train, y_train = make_sample(train,True) #Trueの時に水増し
 X_test, y_test = make_sample(test,False) #Falseでは水増しなし
 xy = (X_train, X_test, y_train, y_test)
 #データを保存する（データの名前を「insta_data2.npy」としている）
-np.save(save_npy +"insta_data2.npy", xy)
+np.save(save+"/insta_data2.npy", xy)
